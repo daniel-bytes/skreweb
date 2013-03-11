@@ -61,18 +61,16 @@ var ParameterSetView = Backbone.View.extend({
     	    var value = parseFloat(this.model.get("channel" + c));
     	    if (isNaN(value)) value = 0;
     	    
-    	    var padding = 5;
-    	    
 			var w = parseInt(width / this.options.num_channels);
 			var h = parseInt(parseFloat(height) * (value));
 			var x = (w * c);
 			var y = height - h;
 			
-            ctxt.fillStyle = "#ff0";
+            ctxt.fillStyle = "#ffff00";
     		ctxt.fillRect(x, y, w, h);
     		
-			ctxt.fillStyle = "#000";
-			ctxt.lineWidth = 3;
+			ctxt.lineWidth = 2;
+			ctxt.strokeStyle = "#ccc";
             ctxt.strokeRect(x, 0, w, height);
             
             ctxt.strokeRect(x, y, w, h);

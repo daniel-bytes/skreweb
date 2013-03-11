@@ -1,20 +1,24 @@
-canvas {
-    border: solid 1px black;
+#parameters_canvas {
+    border: solid 1px #ccc;
 }
 
 div.container {
-    padding: 2px 0 0 5px;
+    padding: 2px 0 0 0;
 }
 
-div.paramlabel {
-    float:left;
-    width:50px;
-    margin-right: 20px;
+div.global_parameter_container {
+    text-align: center;
+    padding-top: 10px;
+    margin-right: 5px;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    float: left;
 }
 
-div.divider {
-    clear:both;
-    padding-bottom: 10px;
+label.global_parameter {
+    color: blue;
+    text-transform: uppercase;
 }
 
 ul.menu {
@@ -25,14 +29,20 @@ ul.menu {
 
 li.menu_item {
     border: 1px solid #ccc;
-    padding: 5px;
+    padding: 1px 5px 1px 5px;
     width: 150px;
     text-align: center;
     cursor: pointer;
+    text-transform: uppercase;
+    color: blue;
 }
 
 li.selected {
     background-color: #ff0;
+}
+
+input.dial {
+    
 }
 
 .left {

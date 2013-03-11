@@ -17,6 +17,14 @@ Application.prototype.init = function() {
         feedback: new ParameterSetModel({ name: "feedback", channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 })
     };
     
+    this.global_parameter_models = {
+      osc: new GlobalParameterModel({    name: "osc",    value: .5 }),
+      filter: new GlobalParameterModel({ name: "filter", value: .5 }),
+      delay: new GlobalParameterModel({  name: "delay",  value: .25 }),
+      flow: new GlobalParameterModel({   name: "flow",   value: .75 }),
+      out: new GlobalParameterModel({    name: "out",    value: .9 })
+    };
+    
     this.selected_parameter_model = new ParameterSelectModel();
     
     
@@ -31,6 +39,14 @@ Application.prototype.init = function() {
     this.parameter_view = new ParameterSetView({ 
         el: this.params.parameter_set 
     });
+    
+    this.global_parameter_views = {
+        osc: new GlobalParameterView({model: this.global_parameter_models.osc, el: this.params.global_parameter_osc}),
+        filter: new GlobalParameterView({model: this.global_parameter_models.filter, el: this.params.global_parameter_filter}),
+        delay: new GlobalParameterView({model: this.global_parameter_models.delay, el: this.params.global_parameter_delay}),
+        flow: new GlobalParameterView({model: this.global_parameter_models.flow, el: this.params.global_parameter_flow}),
+        out: new GlobalParameterView({model: this.global_parameter_models.out, el: this.params.global_parameter_out})
+    };
     
     
     /*
@@ -50,6 +66,13 @@ Application.prototype.init = function() {
            console.log("name: %s, channel: %i, value: %f", args.name, args.channel, args.value);
        })
     });
+    
+    // when global parameter model value changes, update audio
+    _(this.global_parameter_models).each(function(x) {
+        x.on("globalparameter:change", function(x) {
+           console.log("global parameter.  name: %s, value: %f", x.name, x.value);
+        });
+    })
     
     /*
      * Render
