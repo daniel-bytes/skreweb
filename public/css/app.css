@@ -1,0 +1,42 @@
+canvas {
+    border: solid 1px black;
+}
+
+div.container {
+    padding: 2px 0 0 5px;
+}
+
+div.paramlabel {
+    float:left;
+    width:50px;
+    margin-right: 20px;
+}
+
+div.divider {
+    clear:both;
+    padding-bottom: 10px;
+}
+
+ul.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li.menu_item {
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+}
+
+li.selected {
+    background-color: #ff0;
+}
+
+.left {
+    float:left;
+    padding-right: 5px;
+}
+

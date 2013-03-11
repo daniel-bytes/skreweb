@@ -1,0 +1,13 @@
+{
+  "name": "skreweb",
+  "description": "Reaktor Skrewell for the web",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+      "express": "3.x"
+  },
+  "engines": {
+        "node": "0.8.19",
+        "npm": "1.2.10"
+  }
+}
