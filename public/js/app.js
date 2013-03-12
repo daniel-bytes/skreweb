@@ -3,6 +3,8 @@ function Application(params) {
 }
 
 Application.prototype.init = function() {
+    var num_channels = 4;
+    
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure Models
      */
@@ -56,17 +58,22 @@ Application.prototype.init = function() {
  	this.sampleRate = 44100;
  	this.audiolet = new Audiolet(this.sampleRate, 2, this.bufferSize);
  	
-    var osc = new OscillatorChannel(this.audiolet, {
-        osc_freq: .5,
-        freq_mod: .5,
-        osc_amp: .5,
-        amp_mod: .5,
-        hpf: .5,
-        lpf: .5,
-        delay: .5,
-        feedback: .5
-    }); 
-    osc.connect(this.audiolet.output);
+ 	var group_params = [];
+ 	for (var i = 0; i < num_channels; i++) {
+ 	    group_params.push({
+ 	        osc_freq: this.parameter_models.osc_freq.get("channel" + i),
+ 	        freq_mod: this.parameter_models.freq_mod.get("channel" + i),
+ 	        osc_amp: this.parameter_models.osc_amp.get("channel" + i) * this.global_parameter_models.out.get("value"),
+ 	        amp_mod: this.parameter_models.amp_mod.get("channel" + i),
+ 	        hpf: this.parameter_models.hpf.get("channel" + i),
+ 	        lpf: this.parameter_models.lpf.get("channel" + i),
+ 	        delay: this.parameter_models.delay.get("channel" + i),
+ 	        feedback: this.parameter_models.feedback.get("channel" + i),
+ 	    });
+ 	}
+ 	
+ 	this.oscillator_group = new OscillatorGroup(this.audiolet, group_params);
+ 	this.oscillator_group.connect(this.audiolet.output);
     
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -82,19 +89,17 @@ Application.prototype.init = function() {
     // when parameter model value changes, update audio
     _(this.parameter_models).each(function(x) {
        x.on("parameter:change", function(args) {
-           if (args.channel === 0) {
-               osc.setParameter(args.name, args.value);
-           }
+           this.oscillator_group.setParameter(args.channel, args.name, args.value);
            //console.log("name: %s, channel: %i, value: %f", args.name, args.channel, args.value);
-       })
-    });
+       }.bind(this))
+    }.bind(this));
     
     // when global parameter model value changes, update audio
     _(this.global_parameter_models).each(function(x) {
         x.on("globalparameter:change", function(x) {
            console.log("global parameter.  name: %s, value: %f", x.name, x.value);
-        });
-    });
+        }.bind(this));
+    }.bind(this));
     
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
