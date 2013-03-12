@@ -3,7 +3,7 @@ function Application(params) {
 }
 
 Application.prototype.init = function() {
-    /*
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure Models
      */
     this.parameter_models = {
@@ -28,7 +28,7 @@ Application.prototype.init = function() {
     this.selected_parameter_model = new ParameterSelectModel();
     
     
-    /*
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure Views
      */
     this.parameter_select_view = new ParameterSelectView({ 
@@ -49,11 +49,30 @@ Application.prototype.init = function() {
     };
     
     
-    /*
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+     * Configure DSP
+     */
+    this.bufferSize = 4096;
+ 	this.sampleRate = 44100;
+ 	this.audiolet = new Audiolet(this.sampleRate, 2, this.bufferSize);
+ 	
+    var osc = new OscillatorChannel(this.audiolet, {
+        osc_freq: .5,
+        freq_mod: .5,
+        osc_amp: .5,
+        amp_mod: .5,
+        hpf: .5,
+        lpf: .5,
+        delay: .5,
+        feedback: .5
+    }); 
+    osc.connect(this.audiolet.output);
+    
+    
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure Events
      */
-     
-    // when select parameter model changes, update parameter set view
+    // when selected parameter model changes, update parameter set view
     this.selected_parameter_model.on("change", function(m) {
         var parameter_type = m.get("parameter");
         this.parameter_view.model = this.parameter_models[parameter_type];
@@ -63,7 +82,10 @@ Application.prototype.init = function() {
     // when parameter model value changes, update audio
     _(this.parameter_models).each(function(x) {
        x.on("parameter:change", function(args) {
-           console.log("name: %s, channel: %i, value: %f", args.name, args.channel, args.value);
+           if (args.channel === 0) {
+               osc.setParameter(args.name, args.value);
+           }
+           //console.log("name: %s, channel: %i, value: %f", args.name, args.channel, args.value);
        })
     });
     
@@ -72,10 +94,11 @@ Application.prototype.init = function() {
         x.on("globalparameter:change", function(x) {
            console.log("global parameter.  name: %s, value: %f", x.name, x.value);
         });
-    })
+    });
     
-    /*
-     * Render
+    
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+     * Render / Init
      * -> setup first parameter select, which will cause other views to render correctly
      */
     var first_param = this.parameter_models.osc_freq.get("name");
