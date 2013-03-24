@@ -3,31 +3,46 @@ function Application(params) {
 }
 
 Application.prototype.init = function() {
-    var num_channels = 4;
+    var num_channels = 8;
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure Models
      */
     this.parameter_models = {
-        osc_freq: new ParameterSetModel({ name: "osc_freq", channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        freq_mod: new ParameterSetModel({ name: "freq_mod", channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        osc_amp: new ParameterSetModel({  name: "osc_amp",  channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        amp_mod: new ParameterSetModel({  name: "amp_mod",  channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        hpf: new ParameterSetModel({      name: "hpf",      channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        lpf: new ParameterSetModel({      name: "lpf",      channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        delay: new ParameterSetModel({    name: "delay",    channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 }),
-        feedback: new ParameterSetModel({ name: "feedback", channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 })
+        osc_freq: new ParameterSetModel(),
+        freq_mod: new ParameterSetModel(),
+        osc_amp: new ParameterSetModel(),
+        amp_mod: new ParameterSetModel(),
+        hpf: new ParameterSetModel(),
+        lpf: new ParameterSetModel(),
+        delay: new ParameterSetModel(),
+        feedback: new ParameterSetModel()
     };
     
     this.global_parameter_models = {
-      osc: new GlobalParameterModel({    name: "osc",    value: .5 }),
-      filter: new GlobalParameterModel({ name: "filter", value: .5 }),
-      delay: new GlobalParameterModel({  name: "delay",  value: .25 }),
-      flow: new GlobalParameterModel({   name: "flow",   value: .75 }),
-      out: new GlobalParameterModel({    name: "out",    value: .9 })
+      osc: new GlobalParameterModel(),
+      filter: new GlobalParameterModel(),
+      delay: new GlobalParameterModel(),
+      flow: new GlobalParameterModel(),
+      out: new GlobalParameterModel()
     };
     
     this.selected_parameter_model = new ParameterSelectModel();
+    
+    this.parameter_models.osc_freq.set({ name: "osc_freq", channel0: .03, channel1: .08, channel2: .1, channel3: .18, channel4: .27, channel5: .35, channel6: .5, channel7: .65 });
+    this.parameter_models.freq_mod.set({ name: "freq_mod", channel0: .15, channel1: .95, channel2: .5, channel3: 0, channel4: .9, channel5: .05, channel6: .02, channel7: .1 });
+    this.parameter_models.osc_amp.set({  name: "osc_amp",  channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    this.parameter_models.amp_mod.set({  name: "amp_mod",  channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    this.parameter_models.hpf.set({      name: "hpf",      channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    this.parameter_models.lpf.set({      name: "lpf",      channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    this.parameter_models.delay.set({    name: "delay",    channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    this.parameter_models.feedback.set({ name: "feedback", channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    
+    this.global_parameter_models.osc.set({    name: "osc",    value: .5 });
+    this.global_parameter_models.filter.set({ name: "filter", value: .5 });
+    this.global_parameter_models.delay.set({  name: "delay",  value: .25 });
+    this.global_parameter_models.flow.set({   name: "flow",   value: .75 });
+    this.global_parameter_models.out.set({    name: "out",    value: .9 });
     
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -54,27 +69,20 @@ Application.prototype.init = function() {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure DSP
      */
-    this.bufferSize = 4096;
- 	this.sampleRate = 44100;
- 	this.audiolet = new Audiolet(this.sampleRate, 2, this.bufferSize);
- 	
- 	var group_params = [];
- 	for (var i = 0; i < num_channels; i++) {
- 	    group_params.push({
- 	        osc_freq: this.parameter_models.osc_freq.get("channel" + i),
- 	        freq_mod: this.parameter_models.freq_mod.get("channel" + i),
- 	        osc_amp: this.parameter_models.osc_amp.get("channel" + i) * this.global_parameter_models.out.get("value"),
- 	        amp_mod: this.parameter_models.amp_mod.get("channel" + i),
- 	        hpf: this.parameter_models.hpf.get("channel" + i),
- 	        lpf: this.parameter_models.lpf.get("channel" + i),
- 	        delay: this.parameter_models.delay.get("channel" + i),
- 	        feedback: this.parameter_models.feedback.get("channel" + i),
- 	    });
- 	}
- 	
- 	this.oscillator_group = new OscillatorGroup(this.audiolet, group_params);
- 	this.oscillator_group.connect(this.audiolet.output);
-    
+     this.channelCount = 2;
+     this.bufferSize = 4096;
+  	 this.sampleRate = 44100;
+  	 
+     this.audioEngine = new AudioEngine({
+         channelCount: this.channelCount,
+         bufferSize: this.bufferSize,
+         sampleRate: this.sampleRate,
+         oscillatorCount: num_channels,
+         parameters: this.parameter_models,
+         globalParameters: this.global_parameter_models
+     });
+     //this.audioEngine.init();
+
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Configure Events
@@ -89,15 +97,14 @@ Application.prototype.init = function() {
     // when parameter model value changes, update audio
     _(this.parameter_models).each(function(x) {
        x.on("parameter:change", function(args) {
-           this.oscillator_group.setParameter(args.channel, args.name, args.value);
-           //console.log("name: %s, channel: %i, value: %f", args.name, args.channel, args.value);
+           console.log("parameter (name: %s, channel: %i, value: %f)", args.name, args.channel, args.value);
        }.bind(this))
     }.bind(this));
     
     // when global parameter model value changes, update audio
     _(this.global_parameter_models).each(function(x) {
         x.on("globalparameter:change", function(x) {
-           console.log("global parameter.  name: %s, value: %f", x.name, x.value);
+           console.log("global parameter (name: %s, value: %f)", x.name, x.value);
         }.bind(this));
     }.bind(this));
     
