@@ -29,20 +29,20 @@ Application.prototype.init = function() {
     
     this.selected_parameter_model = new ParameterSelectModel();
     
-    this.parameter_models.osc_freq.set({ name: "osc_freq", channel0: .03, channel1: .08, channel2: .1, channel3: .18, channel4: .27, channel5: .35, channel6: .5, channel7: .65 });
-    this.parameter_models.freq_mod.set({ name: "freq_mod", channel0: .15, channel1: .95, channel2: .5, channel3: 0, channel4: .9, channel5: .05, channel6: .02, channel7: .1 });
-    this.parameter_models.osc_amp.set({  name: "osc_amp",  channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
-    this.parameter_models.amp_mod.set({  name: "amp_mod",  channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
-    this.parameter_models.hpf.set({      name: "hpf",      channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
-    this.parameter_models.lpf.set({      name: "lpf",      channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
-    this.parameter_models.delay.set({    name: "delay",    channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
-    this.parameter_models.feedback.set({ name: "feedback", channel0: .5, channel1: .5, channel2: .5, channel3: .5, channel4: .5, channel5: .5, channel6: .5, channel7: .5 });
+    this.parameter_models.osc_freq.set({ name: "osc_freq", channel0: .03, channel1: .08, channel2: .1,  channel3: .18, channel4: .27, channel5: .35, channel6: .5,  channel7: .65 });
+    this.parameter_models.freq_mod.set({ name: "freq_mod", channel0: .15, channel1: .95, channel2: .5,  channel3: 0,   channel4: .9,  channel5: .05, channel6: .02, channel7: .1  });
+    this.parameter_models.osc_amp.set({  name: "osc_amp",  channel0: .5,  channel1: .5,  channel2: .5,  channel3: .5,  channel4: .5,  channel5: .5,  channel6: .5,  channel7: .5  });
+    this.parameter_models.amp_mod.set({  name: "amp_mod",  channel0: .03, channel1: .08, channel2: .1,  channel3: .18, channel4: .27, channel5: .35, channel6: .5,  channel7: .65 });
+    this.parameter_models.hpf.set({      name: "hpf",      channel0: .05, channel1: .05, channel2: .05, channel3: .05, channel4: .05, channel5: .05, channel6: .05, channel7: .05 });
+    this.parameter_models.lpf.set({      name: "lpf",      channel0: .95, channel1: .95, channel2: .95, channel3: .95, channel4: .95, channel5: .95, channel6: .95, channel7: .95 });
+    this.parameter_models.delay.set({    name: "delay",    channel0: .5,  channel1: .5,  channel2: .5,  channel3: .5,  channel4: .5,  channel5: .5,  channel6: .5,  channel7: .5  });
+    this.parameter_models.feedback.set({ name: "feedback", channel0: .5,  channel1: .5,  channel2: .5,  channel3: .5,  channel4: .5,  channel5: .5,  channel6: .5,  channel7: .5  });
     
-    this.global_parameter_models.osc.set({    name: "osc",    value: .5 });
-    this.global_parameter_models.filter.set({ name: "filter", value: .5 });
+    this.global_parameter_models.osc.set({    name: "osc",    value: .5  });
+    this.global_parameter_models.filter.set({ name: "filter", value: .5  });
     this.global_parameter_models.delay.set({  name: "delay",  value: .25 });
     this.global_parameter_models.flow.set({   name: "flow",   value: .75 });
-    this.global_parameter_models.out.set({    name: "out",    value: .9 });
+    this.global_parameter_models.out.set({    name: "out",    value: .9  });
     
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -58,11 +58,11 @@ Application.prototype.init = function() {
     });
     
     this.global_parameter_views = {
-        osc: new GlobalParameterView({model: this.global_parameter_models.osc, el: this.params.global_parameter_osc}),
-        filter: new GlobalParameterView({model: this.global_parameter_models.filter, el: this.params.global_parameter_filter}),
-        delay: new GlobalParameterView({model: this.global_parameter_models.delay, el: this.params.global_parameter_delay}),
-        flow: new GlobalParameterView({model: this.global_parameter_models.flow, el: this.params.global_parameter_flow}),
-        out: new GlobalParameterView({model: this.global_parameter_models.out, el: this.params.global_parameter_out})
+        osc: new GlobalParameterView({    model: this.global_parameter_models.osc,    el: this.params.global_parameter_osc}),
+        filter: new GlobalParameterView({ model: this.global_parameter_models.filter, el: this.params.global_parameter_filter}),
+        delay: new GlobalParameterView({  model: this.global_parameter_models.delay,  el: this.params.global_parameter_delay}),
+        flow: new GlobalParameterView({   model: this.global_parameter_models.flow,   el: this.params.global_parameter_flow}),
+        out: new GlobalParameterView({    model: this.global_parameter_models.out,    el: this.params.global_parameter_out})
     };
     
     
@@ -70,7 +70,7 @@ Application.prototype.init = function() {
      * Configure DSP
      */
      this.channelCount = 2;
-     this.bufferSize = 4096;
+     this.bufferSize = 4096 * 2;
   	 this.sampleRate = 44100;
   	 
      this.audioEngine = new AudioEngine({
@@ -97,22 +97,32 @@ Application.prototype.init = function() {
     // when parameter model value changes, update audio
     _(this.parameter_models).each(function(x) {
        x.on("parameter:change", function(args) {
-           console.log("parameter (name: %s, channel: %i, value: %f)", args.name, args.channel, args.value);
+           this.audioEngine.setParameter(args.channel, args.name, args.value);
+           console.log("parameter:change (name: %s, channel: %i, value: %f)", args.name, args.channel, args.value);
        }.bind(this))
     }.bind(this));
     
     // when global parameter model value changes, update audio
     _(this.global_parameter_models).each(function(x) {
-        x.on("globalparameter:change", function(x) {
-           console.log("global parameter (name: %s, value: %f)", x.name, x.value);
+        x.on("globalparameter:change", function(args) {
+            this.audioEngine.setGlobalParameter(args.name, args.value);
+           console.log("globalparameter:change (name: %s, value: %f)", args.name, args.value);
         }.bind(this));
     }.bind(this));
-    
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * Render / Init
      * -> setup first parameter select, which will cause other views to render correctly
+     * -> send all :change events to init audio engine parameter values
      */
     var first_param = this.parameter_models.osc_freq.get("name");
     this.parameter_select_view.setParameterType(first_param);
+    
+    _(this.parameter_models).each(function(x) {
+        x.sendChangeEvents(num_channels);
+    })
+    
+    _(this.global_parameter_models).each(function(x) {
+        x.sendChangeEvents();
+    })
 }
