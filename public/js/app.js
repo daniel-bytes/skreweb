@@ -35,7 +35,7 @@ Application.prototype.init = function() {
     this.parameter_models.amp_mod.set({  name: "amp_mod",  channel0: .03, channel1: .08, channel2: .1,  channel3: .18, channel4: .27, channel5: .35, channel6: .5,  channel7: .65 });
     this.parameter_models.hpf.set({      name: "hpf",      channel0: .05, channel1: .05, channel2: .05, channel3: .05, channel4: .05, channel5: .05, channel6: .05, channel7: .05 });
     this.parameter_models.lpf.set({      name: "lpf",      channel0: .95, channel1: .95, channel2: .95, channel3: .95, channel4: .95, channel5: .95, channel6: .95, channel7: .95 });
-    this.parameter_models.delay.set({    name: "delay",    channel0: .5,  channel1: .5,  channel2: .5,  channel3: .5,  channel4: .5,  channel5: .5,  channel6: .5,  channel7: .5  });
+    this.parameter_models.delay.set({    name: "delay",    channel0: 0,   channel1: 0,   channel2: 0,   channel3: 0,   channel4: 0,   channel5: 0,   channel6: 0,   channel7: 0   });
     this.parameter_models.feedback.set({ name: "feedback", channel0: .5,  channel1: .5,  channel2: .5,  channel3: .5,  channel4: .5,  channel5: .5,  channel6: .5,  channel7: .5  });
     
     this.global_parameter_models.osc.set({    name: "osc",    value: .5  });
